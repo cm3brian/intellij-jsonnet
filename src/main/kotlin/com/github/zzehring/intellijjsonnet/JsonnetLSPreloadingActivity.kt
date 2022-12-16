@@ -5,9 +5,9 @@ import com.github.zzehring.intellijjsonnet.releases.RepoRelease
 import com.github.zzehring.intellijjsonnet.settings.JLSSettingsStateComponent
 import com.intellij.notification.*
 import com.intellij.openapi.application.PathManager
-import com.intellij.openapi.application.PreloadingActivity
+import com.intellij.openapi.startup.StartupActivity.DumbAware
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.util.system.CpuArch
 import com.intellij.util.text.SemVer
@@ -37,11 +37,11 @@ const val EXTENSIONS = "jsonnet,libsonnet"
 
 data class TargetReleaseInfo(val tag: String, val downloadUrl: String)
 
-object JsonnetLSPreloadingActivity : PreloadingActivity() {
+object JsonnetLSPreloadingActivity : DumbAware {
     private val LOG = Logger.getInstance(
         LSPProjectManagerListener::class.java
     )
-    override fun preload(indicator: ProgressIndicator) {
+    override fun runActivity(project: Project) {
         val languageServerRepo = JLSSettingsStateComponent.instance.state.releaseRepository
         val platform = getPlatform()
         val arch = getArch()
